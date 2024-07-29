@@ -38,5 +38,6 @@ namespace KeyboardApplicationRestApiServer.Controllers
             await _model.AddRangeNewEducationProgressAsync(educationUsersProgresses);
             return NoContent();
         }
+
     }
 }

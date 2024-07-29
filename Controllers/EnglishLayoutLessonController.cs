@@ -8,11 +8,11 @@ namespace KeyboardApplicationRestApiServer.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class EnglishLayouLessonController : ControllerBase
+    public class EnglishLayoutLessonController : ControllerBase
     {
         private EnglishLayoutLessonModel _model;
         private ILogger _logger;
-        public EnglishLayouLessonController(TypingTutorDbContext context, ILogger<EnglishLayouLessonController> logger)
+        public EnglishLayoutLessonController(TypingTutorDbContext context, ILogger<EnglishLayoutLessonController> logger)
         {
             _logger = logger;
             _model = new (context);
@@ -21,6 +21,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         public async Task<ActionResult<IEnumerable<EnglishLayoutLesson>>> GetLessonsByLevelId(int id)
         {
             var lessonsCollection = await _model.GetLessonsByLevelIdAsync(id);
+            _logger.LogInformation("Get lessons by level id method!");
             if (lessonsCollection is null)
                 return NotFound();
             return Ok(lessonsCollection);
