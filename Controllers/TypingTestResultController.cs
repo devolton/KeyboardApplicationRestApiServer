@@ -23,8 +23,12 @@ namespace KeyboardApplicationRestApiServer.Controllers
         {
             
             var testsCollection =await _model.GetTypingTestResultsByUserIdAsync(userId);
-            if(testsCollection is null)
+            if (testsCollection is null)
+            {
+                _logger.LogWarning("GetUserTest return Null");
                 return NotFound();
+            }
+            _logger.LogInformation("GetUsetTest return collection. Count: "+testsCollection.Count().ToString());
             return Ok(testsCollection);
         }
         [HttpGet("BestUserTest/{userId}")]
@@ -33,8 +37,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var bestUserTest= await _model.GetBestUserTestResultAsync(userId);
             if(bestUserTest is null)
             {
+                _logger.LogWarning("GetBestUserTest return NULL!");
                 return NotFound();
             }
+            _logger.LogInformation("GetBestUserTest return bestUserTest!");
             return Ok(bestUserTest);
         }
         [HttpDelete("{id}")]
@@ -50,7 +56,11 @@ namespace KeyboardApplicationRestApiServer.Controllers
         {
             var code = await _model.AddNewTypingTestResultAsync(typingTestResult);
             if (code == 0)
+            {
+                _logger.LogWarning("AddNewTypingTest method error!");
                 return BadRequest();
+            }
+            _logger.LogInformation("AddNewTypingTest is successfully!");
             return Ok();
         }
     }

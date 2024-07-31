@@ -39,6 +39,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
                try
                {
                    _typingTestResults.Add(typingTestResult);
+                   SaveChangesAsync();
                    return ++successCode;
                }
                catch

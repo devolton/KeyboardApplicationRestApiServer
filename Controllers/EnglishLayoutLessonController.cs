@@ -17,6 +17,20 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger = logger;
             _model = new (context);
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EnglishLayoutLesson>>> GetLessons()
+        {
+            var lessonsCollection = await _model.GetAllLessonsAsync();
+            if (lessonsCollection is null)
+            {
+                _logger.LogWarning("GetLessons method return NULL!");
+                return NotFound();
+            }
+              
+            _logger.LogInformation("GetLessons method return collection!");
+            return Ok(lessonsCollection);
+
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<EnglishLayoutLesson>>> GetLessonsByLevelId(int id)
         {

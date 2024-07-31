@@ -17,6 +17,10 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             _englishLayoutLessons = _context.EnglishLayoutLessons;
         }
+        public async Task<IEnumerable<EnglishLayoutLesson>> GetAllLessonsAsync()
+        {
+            return await _englishLayoutLessons.ToListAsync();
+        }
         public async  Task<IEnumerable<EnglishLayoutLesson>> GetLessonsByLevelIdAsync(int levelId)
         {
             return await _englishLayoutLessons.Where(oneLesson=>oneLesson.EnglishLayoutLevelId == levelId).ToListAsync();
