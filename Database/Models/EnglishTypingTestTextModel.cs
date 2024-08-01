@@ -25,6 +25,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
                 try
                 {
                     _englishTypingTestTexts.Add(text);
+                    SaveChangesAsync();
                     return ++successCode;
                 }
                 catch(Exception ex)

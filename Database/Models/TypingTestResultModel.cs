@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace CourseProjectKeyboardApplication.Database.Models
 {
-    public class TypingTestResultModel:BaseTypingTutorModel
+    public class TypingTestResultModel : BaseTypingTutorModel
     {
         private DbSet<TypingTestResult> _typingTestResults;
-        public TypingTestResultModel(TypingTutorDbContext context):base(context)
+        public TypingTestResultModel(TypingTutorDbContext context) : base(context)
         {
             _typingTestResults = _context.TypingTestResults;
         }
         public async Task<IEnumerable<TypingTestResult>> GetTypingTestResultsByUserIdAsync(int userId)
         {
-            return await _typingTestResults.Where(oneTestResult => oneTestResult.UserId== userId).ToListAsync();
+            return await _typingTestResults.Where(oneTestResult => oneTestResult.UserId == userId).ToListAsync();
         }
-        public async  Task<int> RemoveUsersTestAsync(int userId)
+        public async Task<int> RemoveUsersTestAsync(int userId)
         {
             return await Task.Run(() =>
             {
@@ -30,31 +30,33 @@ namespace CourseProjectKeyboardApplication.Database.Models
                 _typingTestResults.RemoveRange(removeTestResultsCollection);
                 return removeCount;
             });
-           
+
         }
         public async Task<int> AddNewTypingTestResultAsync(TypingTestResult typingTestResult)
         {
-           return  await Task.Run(() => {
-               int successCode = 0;
-               try
-               {
-                   _typingTestResults.Add(typingTestResult);
-                   SaveChangesAsync();
-                   return ++successCode;
-               }
-               catch
-               {
-                   return successCode;
-               }
+            return await Task.Run(async () =>
+            {
+                int successCode = 0;
+                try
+                {
+                    _context.Entry(typingTestResult.User).State = EntityState.Unchanged;
+                    _typingTestResults.Add(typingTestResult);
+                    await SaveChangesAsync();
+                    return ++successCode;
+                }
+                catch
+                {
+                    return successCode;
+                }
             });
-            
-           
+
+
         }
-        
+
         public async Task<TypingTestResult?> GetBestUserTestResultAsync(int userId)
         {
-            return await _typingTestResults.Where(oneResult => oneResult.UserId.Equals(userId))?.OrderByDescending(oneResult=>oneResult.Speed).FirstOrDefaultAsync();
+            return await _typingTestResults.Where(oneResult => oneResult.UserId.Equals(userId))?.OrderByDescending(oneResult => oneResult.Speed).FirstOrDefaultAsync();
         }
-        
+
     }
 }

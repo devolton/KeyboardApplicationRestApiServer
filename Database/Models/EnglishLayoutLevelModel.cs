@@ -30,7 +30,9 @@ namespace CourseProjectKeyboardApplication.Database.Models
                   int code = 0;
                   try
                   {
+                      _context.Entry(level.Lessons).State = EntityState.Unchanged;
                       _englishLayoutLevels.Add(level);
+                      SaveChangesAsync();
                       return ++code;
                   }
                   catch (Exception ex)

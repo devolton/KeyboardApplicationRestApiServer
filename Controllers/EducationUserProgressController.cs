@@ -29,7 +29,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEducationProgress(EducationUsersProgress educationUserProgress)
         {
-            await _model.AddNewEducationUserProgressAsync(educationUserProgress);
+            await _model.AddNewEducationUserProgressAsync(educationUserProgress,_logger);
             return NoContent();
         }
         [HttpPost("AddRange")]

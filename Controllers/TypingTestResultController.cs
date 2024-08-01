@@ -25,10 +25,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var testsCollection =await _model.GetTypingTestResultsByUserIdAsync(userId);
             if (testsCollection is null)
             {
-                _logger.LogWarning("GetUserTest return Null");
+                _logger.LogWarning("GetUserTest return Null! Date: "+ DateTime.Now);
                 return NotFound();
             }
-            _logger.LogInformation("GetUsetTest return collection. Count: "+testsCollection.Count().ToString());
+            _logger.LogInformation("GetUsetTest return collection. Count: "+testsCollection.Count().ToString() + "Date: "+DateTime.Now);
             return Ok(testsCollection);
         }
         [HttpGet("BestUserTest/{userId}")]
@@ -37,10 +37,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var bestUserTest= await _model.GetBestUserTestResultAsync(userId);
             if(bestUserTest is null)
             {
-                _logger.LogWarning("GetBestUserTest return NULL!");
+                _logger.LogWarning("GetBestUserTest return NULL! Date: "+DateTime.Now);
                 return NotFound();
             }
-            _logger.LogInformation("GetBestUserTest return bestUserTest!");
+            _logger.LogInformation("GetBestUserTest return bestUserTest! Date: "+DateTime.Now);
             return Ok(bestUserTest);
         }
         [HttpDelete("{id}")]
@@ -48,9 +48,14 @@ namespace KeyboardApplicationRestApiServer.Controllers
         {
             var removedCount = await _model.RemoveUsersTestAsync(id);
             if (removedCount == 0)
+            {
+                _logger.LogWarning("DeleteTypingTestResult method error!");
                 return NotFound();
+            }
+            _logger.LogInformation("DeleteTypingTestResult method success!");
             return Ok();
         }
+
         [HttpPost]
         public async Task<IActionResult> AddNewTypingTestResult(TypingTestResult typingTestResult)
         {

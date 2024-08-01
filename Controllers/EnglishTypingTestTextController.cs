@@ -48,8 +48,12 @@ namespace KeyboardApplicationRestApiServer.Controllers
         public async Task<IActionResult> AddNewText(EnglishTypingTestText text)
         {
             int successCode = await _model.AddNewTextAsync(text);
-            if(successCode ==0) 
+            if (successCode == 0)
+            {
+                _logger.LogWarning("AddNewText ERROR!");
                 return BadRequest();
+            }
+            _logger.LogInformation("AddNewText success!");
             return NoContent();
         }
     }

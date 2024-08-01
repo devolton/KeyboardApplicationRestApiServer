@@ -21,9 +21,9 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             return _context.SaveChanges();
         }
-        public Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            return _context.SaveChangesAsync(); // maybe add await
-        }
+            return await _context.SaveChangesAsync();
+        } 
     }
 }

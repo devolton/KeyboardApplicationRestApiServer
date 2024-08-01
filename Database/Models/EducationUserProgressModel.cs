@@ -16,11 +16,22 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             _educationUsersProgresses = _context.EducationUsersProgresses;
         }
-        public async Task AddNewEducationUserProgressAsync(EducationUsersProgress educationUser)
+        public async Task AddNewEducationUserProgressAsync(EducationUsersProgress educationUser,ILogger logger)
         {
             await Task.Run(() =>
             {
-                _educationUsersProgresses.Add(educationUser);
+                try
+                {
+                    _context.Entry(educationUser.User).State = EntityState.Unchanged;
+                    _context.Entry(educationUser.EnglishLayoutLesson).State = EntityState.Unchanged;
+                    _context.Entry(educationUser.EnglishLayoutLevel).State = EntityState.Unchanged;
+                    _educationUsersProgresses.Add(educationUser);
+                    SaveChangesAsync();//maybe add await
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                }
             });
            
         }
