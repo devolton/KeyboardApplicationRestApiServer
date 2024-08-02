@@ -31,10 +31,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var user = await _model.GetUserByIdAsync(id);
             if (user is null)
             {
-                //add logger
+                _logger.LogWarning($"[{nameof(GetUserById)}] method return NULL!");
                 return NotFound();
             }
-            _logger.Log(LogLevel.Information, user.ToString());
+            _logger.LogInformation($"[{nameof(GetUserById)}] method return user(Id: {user.Id})");
             return Ok(user);
         }
 
@@ -44,11 +44,13 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(User newUser)
         {
-            var successCode = await _model.AddNewUserAsync(newUser);
+            var successCode = await _model.AddNewUserAsync(newUser,_logger);
             if(successCode == 0)
             {
+                _logger.LogWarning("[UserPost] method ERROR!");
                 return BadRequest();
             }
+            _logger.LogInformation("[UserPost] method: user adding operation is successful!");
             return NoContent();
         }
 
@@ -59,13 +61,16 @@ namespace KeyboardApplicationRestApiServer.Controllers
             bool isUserExist = await _model.IsUserExistById(id);
             if (!isUserExist)
             {
-                return BadRequest();
+                _logger.LogWarning($"[{nameof(UpdateUser)}] method return Null!");
+                return NotFound();
             }
             var successCode = await _model.UpdateUserAsync(user);
             if (successCode == 0)
             {
-                return NotFound();
+                _logger.LogWarning($"[{nameof(UpdateUser)}] method return Null!");
+                return BadRequest();
             }
+            _logger.LogInformation($"[{nameof(UpdateUser)}] is success!");
             return Ok();
 
         }
@@ -117,9 +122,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
 
             if (user is null)
             {
+                _logger.LogWarning($"[{nameof(GetUserByLoginOrEmailAndPassword)}] method return NULL!");
                 return NotFound();
             }
-
+            _logger.LogInformation($"[{nameof(GetUserByLoginOrEmailAndPassword)}] method return User(ID: {user.Id}");
             return Ok(user);
         }
     }

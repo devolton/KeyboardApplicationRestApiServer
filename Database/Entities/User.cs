@@ -50,10 +50,10 @@ namespace KeyboardApplicationRestApiServer.Database.Entities
         [Column("english_layout_lesson_id")]
         [ForeignKey(nameof(EnglishLayoutLesson))]
         public int EnglishLayoutLessonId { get; set; }
-        public virtual EnglishLayoutLevel EnglishLayoutLevel { get; set; } = null;
-        public virtual EnglishLayoutLesson EnglishLayoutLesson { get; set; } = null;
-        public virtual ICollection<TypingTestResult> TypingTestResults { get; set; } = null;
-        public virtual ICollection<EducationUsersProgress> EducationUsersProgresses { get; set; } = null;
+        public virtual EnglishLayoutLevel? EnglishLayoutLevel { get; set; } = null;
+        public virtual EnglishLayoutLesson? EnglishLayoutLesson { get; set; } = null;
+        public virtual ICollection<TypingTestResult>? TypingTestResults { get; set; } = null;
+        public virtual ICollection<EducationUsersProgress>? EducationUsersProgresses { get; set; } = null;
         public override string ToString()
         {
             return $"Id: {Id}\n\tLogin: {Login}\n\tEmail: {Email}\n\tLevel title: {EnglishLayoutLevel.Title}\n\tLesson text: {EnglishLayoutLesson.Text}" +
