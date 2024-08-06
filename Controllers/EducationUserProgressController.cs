@@ -22,8 +22,12 @@ namespace KeyboardApplicationRestApiServer.Controllers
         public async Task<ActionResult<IEnumerable<EducationUsersProgress>>> GetEducationProgressesByUserId(int userId)
         {
             var collection = await _model.GetUsersEducationProgressAsync(userId);
-            if(collection is null)
+            if (collection is null)
+            {
+                _logger.LogWarning($"[{nameof(GetEducationProgressesByUserId)}] method return null!");
                 return NotFound();
+            }
+            _logger.LogInformation($"[{nameof(GetEducationProgressesByUserId)}] method return collection. Elements count: {collection.Count()}");
             return Ok(collection);
         }
         [HttpPost]
@@ -35,7 +39,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPost("AddRange")]
         public async Task<IActionResult> AddRangeEducationProgress(IEnumerable<EducationUsersProgress> educationUsersProgresses)
         {
-            await _model.AddRangeNewEducationProgressAsync(educationUsersProgresses);
+            await _model.AddRangeNewEducationProgressAsync(educationUsersProgresses,_logger);
             return NoContent();
         }
 

@@ -25,10 +25,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var testsCollection =await _model.GetTypingTestResultsByUserIdAsync(userId);
             if (testsCollection is null)
             {
-                _logger.LogWarning("GetUserTest return Null! Date: "+ DateTime.Now);
+                _logger.LogWarning($"[{nameof(GetUserTests)}] return Null! Date: "+ DateTime.Now);
                 return NotFound();
             }
-            _logger.LogInformation("GetUsetTest return collection. Count: "+testsCollection.Count().ToString() + "Date: "+DateTime.Now);
+            _logger.LogInformation($"[{nameof(GetUserTests)}] return collection. Count: "+testsCollection.Count().ToString() + "Date: "+DateTime.Now);
             return Ok(testsCollection);
         }
         [HttpGet("BestUserTest/{userId}")]

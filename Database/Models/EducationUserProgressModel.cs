@@ -26,7 +26,8 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     _context.Entry(educationUser.EnglishLayoutLesson).State = EntityState.Unchanged;
                     _context.Entry(educationUser.EnglishLayoutLevel).State = EntityState.Unchanged;
                     _educationUsersProgresses.Add(educationUser);
-                    SaveChangesAsync();//maybe add await
+                    logger.LogInformation($"[{nameof(AddNewEducationUserProgressAsync)}] method is success!");
+                    SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -35,11 +36,27 @@ namespace CourseProjectKeyboardApplication.Database.Models
             });
            
         }
-        public async Task AddRangeNewEducationProgressAsync(IEnumerable<EducationUsersProgress> collection)
+        public async Task AddRangeNewEducationProgressAsync(IEnumerable<EducationUsersProgress> collection,ILogger logger)
         {
             await Task.Run(() =>
             {
-                _educationUsersProgresses.AddRange(collection);
+                try
+                {
+                    foreach (var educationUser in collection)
+                    {
+                        _context.Entry(educationUser.User).State = EntityState.Unchanged;
+                        _context.Entry(educationUser.EnglishLayoutLesson).State = EntityState.Unchanged;
+                        _context.Entry(educationUser.EnglishLayoutLevel).State = EntityState.Unchanged;
+                        _educationUsersProgresses.Add(educationUser);
+                        logger.LogInformation($"[{nameof(AddRangeNewEducationProgressAsync)}] method success!");
+                        SaveChangesAsync();
+                    }
+                }
+                catch(Exception ex)
+                {
+                    logger.LogError(ex.Message);
+                }
+
             });
         }
         public async Task<IEnumerable<EducationUsersProgress>> GetUsersEducationProgressAsync(int userId)
