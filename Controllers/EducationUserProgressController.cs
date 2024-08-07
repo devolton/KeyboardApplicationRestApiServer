@@ -39,6 +39,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPost("AddRange")]
         public async Task<IActionResult> AddRangeEducationProgress(IEnumerable<EducationUsersProgress> educationUsersProgresses)
         {
+            _logger.LogInformation($"{nameof(AddRangeEducationProgress)} method is starter working!");
             await _model.AddRangeNewEducationProgressAsync(educationUsersProgresses,_logger);
             return NoContent();
         }

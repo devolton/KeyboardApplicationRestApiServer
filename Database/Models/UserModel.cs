@@ -42,7 +42,6 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             int successOperationCode = 0;
 
-            // Загружаем пользователя из базы данных
             User? userInDbSet = await _context.Users.Include(u => u.EnglishLayoutLesson)
                                                     .Include(u => u.EnglishLayoutLevel)
                                                     .Include(u => u.EducationUsersProgresses)
@@ -51,7 +50,6 @@ namespace CourseProjectKeyboardApplication.Database.Models
 
             if (userInDbSet != null)
             {
-                // Обновляем поля
                 userInDbSet.Email = user.Email;
                 userInDbSet.Name = user.Name;
                 userInDbSet.Login = user.Login;
@@ -60,12 +58,9 @@ namespace CourseProjectKeyboardApplication.Database.Models
                 userInDbSet.EnglishLayoutLevelId = user.EnglishLayoutLevelId;
                 userInDbSet.AvatarPath = user.AvatarPath;
 
-
-                // Обновляем навигационные свойства
                 userInDbSet.EnglishLayoutLesson = await _context.EnglishLayoutLessons.FindAsync(user.EnglishLayoutLessonId);
                 userInDbSet.EnglishLayoutLevel = await _context.EnglishLayoutLevels.FindAsync(user.EnglishLayoutLevelId);
 
-                // Обновляем навигационные коллекции
                 userInDbSet.EducationUsersProgresses.Clear();
                 foreach (var progress in user.EducationUsersProgresses)
                 {
@@ -77,8 +72,6 @@ namespace CourseProjectKeyboardApplication.Database.Models
                 {
                     userInDbSet.TypingTestResults.Add(await _context.TypingTestResults.FindAsync(result.Id));
                 }
-
-                // Устанавливаем состояние сущности
                 _context.Entry(userInDbSet).State = EntityState.Modified;
 
                 try
