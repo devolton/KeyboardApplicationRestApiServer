@@ -35,9 +35,9 @@ namespace KeyboardApplicationRestApiServer.Controllers
         public async Task<ActionResult<IEnumerable<EnglishLayoutLesson>>> GetLessonsByLevelId(int id)
         {
             var lessonsCollection = await _model.GetLessonsByLevelIdAsync(id);
-            _logger.LogInformation("Get lessons by level id method!");
             if (lessonsCollection is null)
                 return NotFound();
+            _logger.LogInformation($"[{nameof(GetLessonsByLevelId)}] method is success!");
             return Ok(lessonsCollection);
         }
         [HttpPut("{id}/lesson")]

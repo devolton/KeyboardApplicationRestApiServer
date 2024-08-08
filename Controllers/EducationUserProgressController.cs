@@ -3,6 +3,7 @@ using KeyboardApplicationRestApiServer.Database.Context;
 using KeyboardApplicationRestApiServer.Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Policy;
 
 namespace KeyboardApplicationRestApiServer.Controllers
 {
@@ -12,11 +13,11 @@ namespace KeyboardApplicationRestApiServer.Controllers
     {
         private ILogger _logger;
         private EducationUserProgressModel _model;
-        public EducationUserProgressController(TypingTutorDbContext context, ILogger <EducationUserProgressController> logger)
+        public EducationUserProgressController(TypingTutorDbContext context, ILogger<EducationUserProgressController> logger)
         {
             _logger = logger;
             _model = new(context);
-            
+
         }
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<EducationUsersProgress>>> GetEducationProgressesByUserId(int userId)
@@ -33,15 +34,32 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEducationProgress(EducationUsersProgress educationUserProgress)
         {
-            await _model.AddNewEducationUserProgressAsync(educationUserProgress,_logger);
+            await _model.AddNewEducationUserProgressAsync(educationUserProgress, _logger);
             return NoContent();
         }
         [HttpPost("AddRange")]
-        public async Task<IActionResult> AddRangeEducationProgress(IEnumerable<EducationUsersProgress> educationUsersProgresses)
+        public async Task<IActionResult> AddRangeEducationProgress(IEnumerable<EducationUsersProgress> educationUsersProgressCollection)
         {
             _logger.LogInformation($"{nameof(AddRangeEducationProgress)} method is starter working!");
-            await _model.AddRangeNewEducationProgressAsync(educationUsersProgresses,_logger);
+            await _model.AddRangeNewEducationProgressAsync(educationUsersProgressCollection, _logger);
             return NoContent();
+        }
+        [HttpPut("UpdateRange")]
+        public async Task<IActionResult> UpdateRangeEducatonProgress(IEnumerable<EducationUsersProgress> educationUsersProgressCollection)
+        {
+            _logger.LogInformation($"[{nameof(UpdateRangeEducatonProgress)}] method is start!");
+            await _model.UpdateRangeEducationProgressAsync(educationUsersProgressCollection);
+            _logger.LogInformation($"[{nameof(UpdateRangeEducatonProgress)}] method is success!");
+            return NoContent();
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateEducationProgress(EducationUsersProgress educationProgress)
+        {
+            _logger.LogInformation($"[{nameof(UpdateEducationProgress)}] method is start!");
+            await _model.UpdateEducationProgressAsync(educationProgress);
+            _logger.LogInformation($"[{nameof(UpdateEducationProgress)}] method is success!");
+            return NoContent();
+
         }
 
     }

@@ -47,7 +47,11 @@ namespace KeyboardApplicationRestApiServer.Controllers
         {
             var level = await _model.GetLevelByIdAsync(id);
             if (level is null)
+            {
+                _logger.LogWarning($"[{nameof(GetLevelById)}] method return null!");
                 return NotFound();
+            }
+            _logger.LogInformation($"[{nameof(GetLevelById)}] method is success!");
             return Ok(level);
         }
     }

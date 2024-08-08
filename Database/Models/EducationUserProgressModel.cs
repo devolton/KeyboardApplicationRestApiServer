@@ -78,7 +78,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
                             existingUser.EnglishLayoutLevelId = userLevel.Id;
                             existingUser.EnglishLayoutLesson = userLesson;
                             existingUser.EnglishLayoutLessonId = userLesson.Id;
-                            
+
                             educationUserProgress.User = existingUser;
                             _context.Entry(existingUser).State = EntityState.Modified;
                         }
@@ -126,9 +126,46 @@ namespace CourseProjectKeyboardApplication.Database.Models
              });
 
         }
+        public async Task UpdateRangeEducationProgressAsync(IEnumerable<EducationUsersProgress> updatedEducationUserProgressCollection)
+        {
+            await Task.Run(async () =>
+            {
+                foreach (var updatedEducationUserProgress in updatedEducationUserProgressCollection)
+                {
+                    EducationUsersProgress? educationUserProgress = _context.EducationUsersProgresses?.FirstOrDefault(oneEducProg => oneEducProg.Id == updatedEducationUserProgress.Id);
+                    if (educationUserProgress is not null)
+                    {
+                        educationUserProgress.IsWithoutErrorsCompleted = updatedEducationUserProgress.IsWithoutErrorsCompleted;
+                        educationUserProgress.IsLessThanTwoErrorsCompleted = updatedEducationUserProgress.IsLessThanTwoErrorsCompleted;
+                        educationUserProgress.IsSpeedCompleted = updatedEducationUserProgress.IsSpeedCompleted;
+                        _context.Entry(educationUserProgress).State = EntityState.Modified;
+                       
+                    }
+                }
+                await SaveChangesAsync();
+            });
+        }
+        public async Task UpdateEducationProgressAsync(EducationUsersProgress updatedEducationUserProgress)
+        {
+            await Task.Run(async () =>
+            {
+
+                    EducationUsersProgress? educationUserProgress = _context.EducationUsersProgresses?.FirstOrDefault(oneEducProg => oneEducProg.Id == updatedEducationUserProgress.Id);
+                    if (educationUserProgress is not null)
+                    {
+                        educationUserProgress.IsWithoutErrorsCompleted = updatedEducationUserProgress.IsWithoutErrorsCompleted;
+                        educationUserProgress.IsLessThanTwoErrorsCompleted = updatedEducationUserProgress.IsLessThanTwoErrorsCompleted;
+                        educationUserProgress.IsSpeedCompleted = updatedEducationUserProgress.IsSpeedCompleted;
+                        _context.Entry(educationUserProgress).State = EntityState.Modified;
+
+                    }
+                
+                await SaveChangesAsync();
+            });
+        }
         public async Task<EducationUsersProgress?> GetNextEducationProgressAsync(EducationUsersProgress currentProgress)
         {
-            return await _educationUsersProgresses.Where(oneProg => oneProg.Id > currentProgress.Id)?.OrderBy(oneProg => oneProg.Id).FirstOrDefaultAsync();
+            return await _educationUsersProgresses.Where(oneProg => oneProg.Id > currentProgress.Id)?.OrderBy(oneProg => oneProg.Id)?.FirstOrDefaultAsync();
         }
     }
 }
