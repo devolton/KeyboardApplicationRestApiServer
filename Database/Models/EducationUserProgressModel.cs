@@ -99,12 +99,9 @@ namespace CourseProjectKeyboardApplication.Database.Models
 
                         _context.Entry(educationUserProgress).State = EntityState.Added;
                         _educationUsersProgresses.Add(educationUserProgress);
-                        logger.LogInformation($"EducationUsersProgress with LessonId: [{educationUserProgress.EnglishLayoutLessonId}] is added successfully!");
                     }
 
                     logger.LogInformation($"[{nameof(AddRangeNewEducationProgressAsync)}] method success! {nameof(_educationUsersProgresses)} elements count: {_educationUsersProgresses.Count()}");
-                    if (collection is not null || collection.Count() != 0)
-                        logger.LogInformation($"[{nameof(AddRangeNewEducationProgressAsync)}] entity: {collection.First()}");
                     await _context.SaveChangesAsync();
 
                 }

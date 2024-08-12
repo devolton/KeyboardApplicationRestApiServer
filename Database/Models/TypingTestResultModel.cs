@@ -40,6 +40,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
                 try
                 {
                     _context.Entry(typingTestResult.User).State = EntityState.Unchanged;
+                    _context.Entry(typingTestResult).State = EntityState.Added;
                     _typingTestResults.Add(typingTestResult);
                     await SaveChangesAsync();
                     return ++successCode;
@@ -49,6 +50,33 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     return successCode;
                 }
             });
+        }
+        public async Task<int> AddRangeTypingTestResultsAsync(IEnumerable<TypingTestResult> typingTestResultCollection ,ILogger logger)
+        {
+            int successCode = 0;
+            try
+            {
+                if (typingTestResultCollection.Count() > 0 && typingTestResultCollection is not null)
+                {
+                    logger.LogInformation(typingTestResultCollection.First().ToString());
+                }
+                foreach (var  typingTestResult in typingTestResultCollection)
+                {
+                    typingTestResult.User = _context.Users.FirstOrDefault(oneUser => oneUser.Id == typingTestResult.User.Id);
+                    _context.Entry(typingTestResult.User).State = EntityState.Unchanged;
+                    _context.Entry(typingTestResult).State = EntityState.Added;
+                    _typingTestResults.Add(typingTestResult);
+                }
+                
+                await SaveChangesAsync();
+                return ++successCode;
+                
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.ToString());
+                return successCode;
+            }
 
 
         }

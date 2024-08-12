@@ -68,5 +68,17 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger.LogInformation("AddNewTypingTest is successfully!");
             return Ok();
         }
+        [HttpPost("AddRange")]
+        public async Task<IActionResult> AddRangeTypingTestResult(IEnumerable<TypingTestResult> typingTestResultCollection)
+        {
+            var code = await _model.AddRangeTypingTestResultsAsync(typingTestResultCollection, _logger);
+            if(code == 0)
+            {
+                _logger.LogError($"[{nameof(AddRangeTypingTestResult)}] method error!");
+                return BadRequest();
+            }
+            _logger.LogInformation($"[{nameof(AddRangeTypingTestResult)}] method is success. Added count: {typingTestResultCollection.Count()}. Time: {DateTime.Now}");
+            return Ok();
+        }
     }
 }
