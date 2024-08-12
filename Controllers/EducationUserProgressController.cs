@@ -40,7 +40,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPost("AddRange")]
         public async Task<IActionResult> AddRangeEducationProgress(IEnumerable<EducationUsersProgress> educationUsersProgressCollection)
         {
-            _logger.LogInformation($"{nameof(AddRangeEducationProgress)} method is starter working!");
+            _logger.LogInformation($"{nameof(AddRangeEducationProgress)} method is started working!");
             await _model.AddRangeNewEducationProgressAsync(educationUsersProgressCollection, _logger);
             return NoContent();
         }

@@ -108,26 +108,36 @@ namespace CourseProjectKeyboardApplication.Database.Models
             return successOperationCode;
 
         }
-        public async Task<int> AddNewUserAsync(User newUser,ILogger logger)  
+        public async Task<User?> AddNewUserAsync(User newUser,ILogger logger)  
         {
-            int successCode = 0;
-            await Task.Run(async () =>
+           return await Task.Run(async () =>
             {
                 try
                 {
-                    //newUser.EnglishLayoutLesson = _context.EnglishLayoutLessons.FirstOrDefault(oneLesson => oneLesson.Id == newUser.EnglishLayoutLessonId);
-                    //newUser.EnglishLayoutLevel = _context.EnglishLayoutLevels.FirstOrDefault(oneLevel =>oneLevel.Id == newUser.EnglishLayoutLevelId);
-                    _users.Add(newUser);
+                    var lesson = _context.EnglishLayoutLessons.FirstOrDefault(oneLesson => oneLesson.Id == newUser.EnglishLayoutLessonId);
+                    var level = _context.EnglishLayoutLevels.FirstOrDefault(oneLevel => oneLevel.Id == newUser.EnglishLayoutLevelId);
+                    if (lesson is not null)
+                    {
+                        newUser.EnglishLayoutLesson = lesson;
+                        _context.Entry(lesson).State = EntityState.Unchanged;
+                    }
+                    if (level is not null)
+                    {
+                        newUser.EnglishLayoutLevel = level;
+                        _context.Entry(level).State = EntityState.Unchanged;
+                    }
+                    var addedUser = _users.Add(newUser);
+                    
                     _context.Entry(newUser).State = EntityState.Added;
                     await SaveChangesAsync();
-                    successCode++;
+                    return addedUser;
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex.Message);
+                    return null;
                 }
             });
-            return successCode;
         }
         public async Task<bool> IsUserExistByEmailAsync(string email)
         {

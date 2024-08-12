@@ -42,16 +42,16 @@ namespace KeyboardApplicationRestApiServer.Controllers
 
         // POST <UserController>
         [HttpPost]
-        public async Task<IActionResult> Post(User newUser)
+        public async Task<ActionResult<User>> Post(User newUser)
         {
-            var successCode = await _model.AddNewUserAsync(newUser,_logger);
-            if(successCode == 0)
+            var addedUser = await _model.AddNewUserAsync(newUser,_logger);
+            if(addedUser is null)
             {
                 _logger.LogWarning("[UserPost] method ERROR!");
                 return BadRequest();
             }
             _logger.LogInformation("[UserPost] method: user adding operation is successful!");
-            return NoContent();
+            return Ok(addedUser);
         }
 
         // PUT <UserController>/5

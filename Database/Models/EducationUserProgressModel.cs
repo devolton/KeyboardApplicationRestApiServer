@@ -1,8 +1,10 @@
 ﻿using KeyboardApplicationRestApiServer.Database.Context;
 using KeyboardApplicationRestApiServer.Database.Entities;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,12 +103,22 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     }
 
                     logger.LogInformation($"[{nameof(AddRangeNewEducationProgressAsync)}] method success! {nameof(_educationUsersProgresses)} elements count: {_educationUsersProgresses.Count()}");
+                    if (collection is not null || collection.Count() != 0)
+                        logger.LogInformation($"[{nameof(AddRangeNewEducationProgressAsync)}] entity: {collection.First()}");
                     await _context.SaveChangesAsync();
 
                 }
-                catch (Exception ex)
+                catch (DbUpdateException ex)
                 {
-                    logger.LogError(ex.Message);
+                    var innerException = ex.InnerException?.Message;
+                    logger.LogError(innerException);
+                    string str = string.Empty;
+                    foreach (var item in ex.Entries)
+                    {
+                        str += item.ToString() + " ";
+                    }
+                    logger.LogError(str);
+                   
                 }
 
             });
