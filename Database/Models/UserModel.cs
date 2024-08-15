@@ -41,56 +41,68 @@ namespace CourseProjectKeyboardApplication.Database.Models
         public async Task<int> UpdateUserAsync(User user)
         {
             int successOperationCode = 0;
-
-            User? userInDbSet = await _context.Users.Include(u => u.EnglishLayoutLesson)
-                                                    .Include(u => u.EnglishLayoutLevel)
-                                                    .Include(u => u.EducationUsersProgresses)
-                                                    .Include(u => u.TypingTestResults)
-                                                    .FirstOrDefaultAsync(u => u.Id == user.Id);
-
-            if (userInDbSet != null)
+            try
             {
-                userInDbSet.Email = user.Email;
-                userInDbSet.Name = user.Name;
-                userInDbSet.Login = user.Login;
-                userInDbSet.Password = user.Password;
-                userInDbSet.EnglishLayoutLessonId = user.EnglishLayoutLessonId;
-                userInDbSet.EnglishLayoutLevelId = user.EnglishLayoutLevelId;
-                userInDbSet.AvatarPath = user.AvatarPath;
+                User? userInDbSet = await _context.Users.Include(u => u.EnglishLayoutLesson)
+                                                        .Include(u => u.EnglishLayoutLevel)
+                                                        .Include(u => u.EducationUsersProgresses)
+                                                        .Include(u => u.TypingTestResults)
+                                                        .FirstOrDefaultAsync(u => u.Id == user.Id);
 
-                userInDbSet.EnglishLayoutLesson = await _context.EnglishLayoutLessons.FindAsync(user.EnglishLayoutLessonId);
-                userInDbSet.EnglishLayoutLevel = await _context.EnglishLayoutLevels.FindAsync(user.EnglishLayoutLevelId);
-
-                userInDbSet.EducationUsersProgresses.Clear();
-                foreach (var progress in user.EducationUsersProgresses)
+                if (userInDbSet != null)
                 {
-                    userInDbSet.EducationUsersProgresses.Add(await _context.EducationUsersProgresses.FindAsync(progress.Id));
+                    userInDbSet.Email = user.Email;
+                    userInDbSet.Name = user.Name;
+                    userInDbSet.Login = user.Login;
+                    userInDbSet.Password = user.Password;
+                    userInDbSet.EnglishLayoutLessonId = user.EnglishLayoutLessonId;
+                    userInDbSet.EnglishLayoutLevelId = user.EnglishLayoutLevelId;
+                    userInDbSet.AvatarPath = user.AvatarPath;
+
+                    userInDbSet.EnglishLayoutLesson = await _context.EnglishLayoutLessons.FindAsync(user.EnglishLayoutLessonId);
+                    userInDbSet.EnglishLayoutLevel = await _context.EnglishLayoutLevels.FindAsync(user.EnglishLayoutLevelId);
+
+                    //if (userInDbSet.EducationUsersProgresses is not null)
+                    //{
+                    //    userInDbSet.EducationUsersProgresses.Clear();
+                    //    foreach (var progress in user.EducationUsersProgresses)
+                    //    {
+                    //        userInDbSet.EducationUsersProgresses.Add(await _context.EducationUsersProgresses.FindAsync(progress.Id));
+                    //    }
+                    //}
+
+                    //if (userInDbSet.TypingTestResults is not null)
+                    //{
+                    //    userInDbSet.TypingTestResults.Clear();
+                    //    foreach (var result in user.TypingTestResults)
+                    //    {
+                    //        userInDbSet.TypingTestResults.Add(await _context.TypingTestResults.FindAsync(result.Id));
+                    //    }
+                    //}
+                    _context.Entry(userInDbSet).State = EntityState.Modified;
+                   
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        successOperationCode++;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Логирование ошибки
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
                 }
-
-                userInDbSet.TypingTestResults.Clear();
-                foreach (var result in user.TypingTestResults)
+                else
                 {
-                    userInDbSet.TypingTestResults.Add(await _context.TypingTestResults.FindAsync(result.Id));
-                }
-                _context.Entry(userInDbSet).State = EntityState.Modified;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    successOperationCode++;
-                }
-                catch (Exception ex)
-                {
-                    // Логирование ошибки
-                    Console.WriteLine($"Error: {ex.Message}");
+                    // Если пользователь не найден, возвращаем код ошибки
+                    successOperationCode = -1;
                 }
             }
-            else
+            catch(NullReferenceException ex)
             {
-                // Если пользователь не найден, возвращаем код ошибки
-                successOperationCode = -1;
+                Console.WriteLine(ex.Message+ ":"+ ex.Source+" "+ex.TargetSite);
             }
-
             return successOperationCode;
         }
 

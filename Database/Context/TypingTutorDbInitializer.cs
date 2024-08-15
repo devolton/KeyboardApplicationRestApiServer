@@ -1792,6 +1792,61 @@ namespace KeyboardApplicationRestApiServer.Database.Context
                 {
                     Id =11,
                     Text = "At dawn, the countryside woke slowly. Farmers began their day, tending to fields and livestock. The sky was painted in soft pastel colors as the sun rose. Birds sang their morning songs, and a gentle breeze rustled the leaves. A dog barked in the distance, greeting the new day. It was a simple, yet beautiful scene, a reminder of the quiet, enduring rhythms of rural life and the beauty of nature's daily renewal."
+                },
+                new EnglishTypingTestText
+                {
+                    Id =12,
+                    Text="Typing is a skill that anyone can learn. By practicing regularly, you can increase your speed from 30 words per minute (WPM) to over 60 WPM. John, who lives on 3rd Avenue, practices every day. He often says, 'Consistency is key to success.' On June 5th, he typed 1,000 words in 20 minutes! Isn’t that impressive? Always remember: Practice makes perfect. Keep your eyes on the screen and your fingers on the keys."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 13,
+                    Text="The rise of artificial intelligence is changing how we live. From smart homes to autonomous vehicles, AI is becoming integral to daily life. In 2023, 67% of businesses adopted AI in some form. Companies like Google and Microsoft invest billions in AI research. As Bill Gates once said, 'AI will transform industries.' Despite the benefits, ethical considerations must be addressed. Privacy concerns and data security are crucial. Innovation should not compromise user trust or data integrity."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 14,
+                    Text="Exploring the world offers unique experiences and memories. In 2024, over 1.5 billion people traveled internationally. Popular destinations include Paris, Tokyo, and New York. The Eiffel Tower in Paris attracts more than 7 million visitors each year. Traveling exposes you to different cultures and languages, broadening your perspective. Remember to pack essentials: passport, camera, and a universal charger. As Mark Twain said, 'Travel is fatal to prejudice, bigotry, and narrow-mindedness.' Always respect local customs and traditions."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 15,
+                    Text="Maintaining a healthy lifestyle involves regular exercise and a balanced diet. The World Health Organization recommends at least 150 minutes of moderate exercise weekly. Activities like running, cycling, and swimming are excellent choices. A balanced diet includes fruits, vegetables, proteins, and whole grains. Avoid processed foods high in sugar and fat. Staying hydrated is also crucial; aim for 8 glasses of water per day. Remember, consistency is key to achieving your fitness goals. 'Health is wealth,' as the saying goes."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 16,
+                    Text="Education is a powerful tool for personal and societal growth. In 2024, global literacy rates reached 86%. Online learning platforms like Coursera and Khan Academy make education accessible to millions. Subjects range from computer science to history. As Nelson Mandela said, 'Education is the most powerful weapon you can use to change the world.' Lifelong learning keeps your mind sharp and adaptable. Invest in your education by reading books, attending workshops, and taking online courses. Knowledge is power."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 17,
+                    Text="Cooking at home is both fun and rewarding. In 2022, 60% of Americans cooked more meals at home. Simple recipes like pasta, stir-fry, and salads are great for beginners. Cooking allows you to control ingredients and portion sizes. Experimenting with herbs and spices can enhance flavors. Remember to follow safety tips: wash your hands, use separate cutting boards for meat and vegetables, and cook meat to safe temperatures. As Julia Child said, 'People who love to eat are always the best people."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 18,
+                    Text="Climate change is one of the most pressing issues of our time. In 2024, global carbon emissions reached 36.8 billion metric tons. Reducing emissions requires a collective effort from governments, businesses, and individuals. Simple actions like recycling, conserving water, and using public transport can make a difference. Renewable energy sources like solar and wind power are crucial for a sustainable future. 'The Earth is what we all have in common,' said Wendell Berry. Protecting our planet is everyone's responsibility."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 19,
+                    Text="Music has the power to uplift and inspire. In 2023, streaming platforms like Spotify and Apple Music had over 500 million subscribers. Genres range from classical to hip-hop. Learning to play an instrument can be a fulfilling hobby. The piano and guitar are popular choices for beginners. As Friedrich Nietzsche said, 'Without music, life would be a mistake.' Attending live concerts and festivals can be a memorable experience. Music brings people together and creates lasting memories."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 20,
+                    Text="Sports play a significant role in culture and society. In 2024, the Summer Olympics in Paris attracted over 10,000 athletes from 206 countries. Popular sports include soccer, basketball, and tennis. Playing sports improves physical fitness and teaches teamwork and discipline. Watching sports events with friends and family can be fun and exciting. As Michael Jordan said, 'Talent wins games, but teamwork and intelligence win championships.' Support your local teams and enjoy the thrill of competition."
+                },
+                new EnglishTypingTestText
+                {
+                    Id = 21,
+                    Text="Reading opens the door to new worlds and ideas. In 2023, over 700 million books were sold in the United States. Genres include fiction, non-fiction, and poetry. Famous authors like Shakespeare, Tolkien, and Austen have inspired generations of readers. Joining a book club is a great way to share your love of reading. As J.K. Rowling said, 'Books are a uniquely portable magic.' Whether you prefer e-books or print, reading enriches your life and expands your horizons."
+                },
+                new EnglishTypingTestText
+                {
+                    Id =22, 
+                    Text = "History teaches us about the past and helps us understand the present. In 2024, historians uncovered new evidence about ancient civilizations. Learning about historical events, like the Renaissance or World War II, provides valuable insights into human behavior and society. Museums and historical sites offer a glimpse into the past. 'Those who do not learn history are doomed to repeat it,' said George Santayana. Studying history encourages critical thinking and promotes a deeper appreciation for the present."
                 }
             };
         }
