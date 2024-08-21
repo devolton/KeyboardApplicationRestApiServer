@@ -1741,57 +1741,57 @@ namespace KeyboardApplicationRestApiServer.Database.Context
                 new EnglishTypingTestText
                 {
                     Id=1,
-                    Text = "The sun rises, painting the sky with hues of orange and pink. Birds chirp their morning song, welcoming the dawn. Dew glistens on blades of grass, nature's own jewels. A new day begins, full of possibilities and adventures waiting to be discovered. Embrace the day, for it is yours to conquer."
+                    Text = "Technology has revolutionized communication, connecting billions globally. In 2023, 85% of the world's population has access to the internet. Devices like smartphones, laptops, and tablets dominate everyday life. Innovators such as Steve Jobs, Bill Gates, and Elon Musk have shaped the digital era. Joining a tech community is a great way to stay updated. As Steve Jobs said, 'Innovation distinguishes between a leader and a follower.' Whether you prefer iOS or Android, embracing technology enhances efficiency and broadens your opportunities."
                 },
                 new EnglishTypingTestText
                 {
                     Id =2,
-                    Text = "The forest was alive with the sounds of nature. Birds sang melodious tunes, and leaves rustled in the gentle breeze. Sunlight filtered through the canopy, creating dappled patterns on the forest floor. A deer cautiously approached a stream for a drink, while squirrels darted up trees. It was a peaceful morning, perfect for a hike. Nature's beauty and tranquility offered a much-needed escape from the chaos of daily life."
+                    Text = "Maintaining a healthy lifestyle requires balance and dedication. In 2023, about 50% of adults exercise regularly in the United States. Popular activities include running, yoga, and weightlifting. Renowned fitness experts like Jillian Michaels, Chris Hemsworth, and Arnold Schwarzenegger inspire millions. Joining a gym or a fitness class can boost motivation. As they say, 'Health is wealth.' Whether you prefer a home workout or a gym session, staying active improves both physical and mental well-being."
                 },
                 new EnglishTypingTestText
                 {
                     Id =3,
-                    Text = "On a serene beach, waves lapped gently against the shore. The sun, setting in a blaze of orange and pink, cast long shadows on the sand. Seagulls called out as they soared overhead. A couple strolled hand in hand, leaving footprints in their wake. Children built sandcastles, their laughter mingling with the sound of the sea. As night approached, the stars began to twinkle, promising a peaceful end to the day."
+                    Text = "In 2023, millions embraced the DIY trend, tackling everything from homemade furniture to intricate wall art. Creating something with your hands offers a sense of accomplishment. Tools like power drills, paintbrushes, and wood planks become instruments of creativity. Whether you're refurbishing a thrift store find or building a birdhouse from scratch, DIY projects allow personal expression. Plus, nothing beats the satisfaction of saying, 'I made that,' when guests admire your work."
                 },
                 new EnglishTypingTestText
                 {
                     Id= 4,
-                    Text = "In a bustling city, the streets were filled with people and the hum of traffic. Skyscrapers towered overhead, their windows reflecting the midday sun. Street vendors called out, selling everything from food to trinkets. Amidst the chaos, a street musician played a soulful tune on his guitar, capturing the attention of passersby. Despite the city's frenetic pace, moments of beauty and connection could still be found."
+                    Text = "Collecting vintage watches is both a passion and an investment. A Rolex Submariner from 1953 might fetch over $10,000 today. These timepieces, with their intricate mechanics, tell stories of a bygone era. Enthusiasts scour auctions and online forums, seeking rare models like the Omega Speedmaster, famously worn during the Apollo 11 mission. The challenge? Ensuring authenticity. A single 'Swiss Made' marking can make all the difference. For collectors, the thrill lies in the hunt and the ticking legacy on their wrist."
                 },
                 new EnglishTypingTestText
                 {
                     Id=  5,
-                    Text = "The garden was a riot of color. Flowers of every hue bloomed, their scents mingling in the air. Bees buzzed from blossom to blossom, while butterflies danced in the sunlight. A gardener tended to the plants with care, pruning and watering. In one corner, a small pond reflected the sky, with koi fish swimming lazily beneath the surface. It was a sanctuary of peace, a reminder of nature's bounty and beauty."
+                    Text = "Extreme weather events are becoming more frequent. Imagine a hurricane with winds exceeding 150 mph, tearing through a city. Storm surges can reach 15 feet, flooding streets and homes. In some places, temperatures soar above 100°F, while in others, blizzards drop 2 feet of snow overnight. Meteorologists use advanced models to predict these events, issuing alerts to help people prepare. But even with all our technology, nature's power remains humbling, reminding us of our vulnerability."
                 },
                 new EnglishTypingTestText
                 {
                     Id =6,
-                    Text = "On a cold winter's night, snow fell gently, blanketing the world in white. The air was crisp, and the only sounds were the crunch of footsteps and the distant hoot of an owl. Inside a cozy cabin, a fire crackled warmly in the hearth. Family and friends gathered, sharing stories and laughter. Hot cocoa was passed around, its steam rising in the air. Outside, the world slept, wrapped in a peaceful, snowy silence."
+                    Text = "Numismatics, the study and collection of coins, is a hobby rich in history. A rare 1913 Liberty Head nickel, one of only five known, can be worth over $4 million! Collectors seek coins with minting errors, like the 1955 double die penny, valued at around $1,000. It’s not just about the monetary value; each coin tells a story of its era. Whether it's Roman denarii or modern commemorative coins, numismatics offers a tangible connection to history."
                 },
                 new EnglishTypingTestText
                 {
                     Id= 7,
-                    Text ="The market was alive with activity. Stalls overflowed with fresh produce, colorful fabrics, and handcrafted goods. Vendors called out, enticing customers with their wares. The smell of spices and cooked food wafted through the air. Children ran about, laughing and playing. Musicians played lively tunes, adding to the festive atmosphere. It was a place of community and culture, where people from all walks of life came together."
+                    Text ="Homebrewing is both an art and a science. With $200 worth of equipment—like fermenters, airlocks, and hydrometers—anyone can start brewing. Ingredients like malt, hops, and yeast are combined in precise ratios. The process? Boil, ferment, bottle, and wait. After 2 weeks, a craft beer with a 5.5% ABV might be ready to enjoy. For enthusiasts, the reward isn’t just in drinking but in perfecting recipes. Each batch is a step closer to the ideal brew."
                 },
                 new EnglishTypingTestText
                 {
                     Id = 8,
-                    Text = "In a quiet library, the only sound was the rustle of pages turning. Rows upon rows of books lined the shelves, each one a gateway to another world. A student sat at a table, engrossed in a thick tome. Nearby, a librarian carefully shelved books. The atmosphere was one of calm and concentration. Outside, the hustle and bustle of the city continued, but inside, time seemed to slow, offering a refuge of knowledge and peace."
+                    Text = "Urban foraging is the practice of finding edible plants and mushrooms in city environments. Imagine discovering wild garlic in a park or dandelions between sidewalk cracks. Enthusiasts carry guidebooks or use apps to identify safe plants. A single outing might yield enough greens for a salad or berries for jam. The key? Knowing what’s safe—some plants, like deadly nightshade, are toxic. Foragers often say, 'Nature provides', and in urban landscapes, this rings surprisingly true."
                 },
                 new EnglishTypingTestText
                 {
                     Id =9,
-                    Text = "A lone hiker trekked through the mountains, the path winding through rugged terrain. The air was fresh and crisp, with the scent of pine trees all around. Birds of prey soared high above, their cries echoing through the valleys. The hiker paused at a lookout point, taking in the breathtaking view of snow-capped peaks and lush forests below. It was a moment of pure freedom and connection with nature, far from the chaos of civilization."
+                    Text = "Escape rooms challenge participants to solve puzzles within 60 minutes. Imagine being locked in a room themed like a 1940s detective office. Clues might include a code hidden in a typewriter ribbon—\"1945\"—or a key taped under a desk. Teams of 4-6 people must communicate, think critically, and manage time effectively. Each solved clue leads closer to the exit. Success rates vary, with some rooms having a 30% escape rate. The thrill lies in the race against the clock."
                 },
                 new EnglishTypingTestText
                 {
                     Id =10,
-                    Text = "The old cafe was a haven for artists and dreamers. Its walls were adorned with paintings and photographs, each telling a unique story. The smell of freshly brewed coffee filled the air. Patrons sat at small tables, some scribbling in notebooks, others deep in conversation. A jazz band played softly in the corner, adding to the intimate ambiance. It was a place where creativity flourished, and ideas flowed freely."
+                    Text = "Collectible card games (CCGs) are a mix of strategy, luck, and creativity. Players build decks from hundreds of available cards, each with unique abilities. A rare card like \"Black Lotus\" from Magic: The Gathering can fetch over $20,000! Matches involve tactics, bluffing, and quick thinking. Tournaments offer cash prizes and bragging rights, with some events attracting thousands of players. For fans, it’s not just a game but a community, with friendships built over shared victories and losses."
                 },
                 new EnglishTypingTestText
                 {
                     Id =11,
-                    Text = "At dawn, the countryside woke slowly. Farmers began their day, tending to fields and livestock. The sky was painted in soft pastel colors as the sun rose. Birds sang their morning songs, and a gentle breeze rustled the leaves. A dog barked in the distance, greeting the new day. It was a simple, yet beautiful scene, a reminder of the quiet, enduring rhythms of rural life and the beauty of nature's daily renewal."
+                    Text = "Genealogy connects us to our roots. Using tools like AncestryDNA, you can uncover your ethnic background—perhaps 35% Irish and 25% Scandinavian. Records like census data and birth certificates offer clues about ancestors. A search might reveal a great-grandparent who immigrated in 1912 or a Civil War soldier in the family tree. The challenge? Piecing together fragmented histories. For many, it’s about more than names and dates; it’s about understanding where you come from and how your story fits into a larger tapestry."
                 },
                 new EnglishTypingTestText
                 {

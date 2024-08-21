@@ -62,23 +62,6 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     userInDbSet.EnglishLayoutLesson = await _context.EnglishLayoutLessons.FindAsync(user.EnglishLayoutLessonId);
                     userInDbSet.EnglishLayoutLevel = await _context.EnglishLayoutLevels.FindAsync(user.EnglishLayoutLevelId);
 
-                    //if (userInDbSet.EducationUsersProgresses is not null)
-                    //{
-                    //    userInDbSet.EducationUsersProgresses.Clear();
-                    //    foreach (var progress in user.EducationUsersProgresses)
-                    //    {
-                    //        userInDbSet.EducationUsersProgresses.Add(await _context.EducationUsersProgresses.FindAsync(progress.Id));
-                    //    }
-                    //}
-
-                    //if (userInDbSet.TypingTestResults is not null)
-                    //{
-                    //    userInDbSet.TypingTestResults.Clear();
-                    //    foreach (var result in user.TypingTestResults)
-                    //    {
-                    //        userInDbSet.TypingTestResults.Add(await _context.TypingTestResults.FindAsync(result.Id));
-                    //    }
-                    //}
                     _context.Entry(userInDbSet).State = EntityState.Modified;
                    
 
@@ -89,13 +72,12 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     }
                     catch (Exception ex)
                     {
-                        // Логирование ошибки
-                        Console.WriteLine($"Error: {ex.Message}");
+                        
                     }
                 }
                 else
                 {
-                    // Если пользователь не найден, возвращаем код ошибки
+                    
                     successOperationCode = -1;
                 }
             }
