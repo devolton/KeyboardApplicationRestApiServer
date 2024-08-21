@@ -1,6 +1,7 @@
 ﻿using CourseProjectKeyboardApplication.Database.Models;
 using KeyboardApplicationRestApiServer.Database.Context;
 using KeyboardApplicationRestApiServer.Database.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger = logger;
             _model = new TypingTestResultModel(context);
         }
-
+        [Authorize]
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<TypingTestResult>>> GetUserTests(int userId)
         {
@@ -31,6 +32,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger.LogInformation($"[{nameof(GetUserTests)}] return collection. Count: "+testsCollection.Count().ToString() + "Date: "+DateTime.Now);
             return Ok(testsCollection);
         }
+        [Authorize]
         [HttpGet("BestUserTest/{userId}")]
         public async Task<ActionResult<TypingTestResult?>> GetBestUserTest(int userId)
         {
@@ -43,6 +45,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger.LogInformation("GetBestUserTest return bestUserTest! Date: "+DateTime.Now);
             return Ok(bestUserTest);
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTypingTestResult(int id)
         {
@@ -55,7 +58,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger.LogInformation("DeleteTypingTestResult method success!");
             return Ok();
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddNewTypingTestResult(TypingTestResult typingTestResult)
         {
@@ -68,6 +71,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger.LogInformation("AddNewTypingTest is successfully!");
             return Ok();
         }
+        [Authorize]
         [HttpPost("AddRange")]
         public async Task<IActionResult> AddRangeTypingTestResult(IEnumerable<TypingTestResult> typingTestResultCollection)
         {

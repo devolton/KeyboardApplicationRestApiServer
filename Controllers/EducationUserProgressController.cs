@@ -1,6 +1,7 @@
 ﻿using CourseProjectKeyboardApplication.Database.Models;
 using KeyboardApplicationRestApiServer.Database.Context;
 using KeyboardApplicationRestApiServer.Database.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Policy;
@@ -19,6 +20,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _model = new(context);
 
         }
+        [Authorize]
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<EducationUsersProgress>>> GetEducationProgressesByUserId(int userId)
         {
@@ -31,12 +33,15 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger.LogInformation($"[{nameof(GetEducationProgressesByUserId)}] method return collection. Elements count: {collection.Count()}");
             return Ok(collection);
         }
+
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddEducationProgress(EducationUsersProgress educationUserProgress)
         {
             await _model.AddNewEducationUserProgressAsync(educationUserProgress, _logger);
             return NoContent();
         }
+        [Authorize]
         [HttpPost("AddRange")]
         public async Task<IActionResult> AddRangeEducationProgress(IEnumerable<EducationUsersProgress> educationUsersProgressCollection)
         {
@@ -44,6 +49,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             await _model.AddRangeNewEducationProgressAsync(educationUsersProgressCollection, _logger);
             return NoContent();
         }
+        [Authorize]
         [HttpPut("UpdateRange")]
         public async Task<IActionResult> UpdateRangeEducatonProgress(IEnumerable<EducationUsersProgress> educationUsersProgressCollection)
         {
@@ -52,6 +58,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger.LogInformation($"[{nameof(UpdateRangeEducatonProgress)}] method is success!");
             return NoContent();
         }
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateEducationProgress(EducationUsersProgress educationProgress)
         {

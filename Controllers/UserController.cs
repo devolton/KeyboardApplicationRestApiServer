@@ -1,8 +1,13 @@
 ﻿using CourseProjectKeyboardApplication.Database.Models;
 using KeyboardApplicationRestApiServer.Database.Context;
 using KeyboardApplicationRestApiServer.Database.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,17 +19,18 @@ namespace KeyboardApplicationRestApiServer.Controllers
     {
         private readonly UserModel _model;
 
-        // create usersEntitiesCollection
+        private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
 
-        public UserController(TypingTutorDbContext context,ILogger<UserController> logger)
+        public UserController(IConfiguration configuration,TypingTutorDbContext context,ILogger<UserController> logger)
         {
+            _configuration = configuration;
             _logger = logger;
             _model = new UserModel(context);
         }
 
-        // GET: User/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<User?>> GetUserById(int id)
         {
@@ -42,7 +48,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
 
         // POST <UserController>
         [HttpPost]
-        public async Task<ActionResult<User>> Post(User newUser)
+        public async Task<ActionResult<KeyValuePair<User,string?>>> Post(User newUser)
         {
             var addedUser = await _model.AddNewUserAsync(newUser,_logger);
             if(addedUser is null)
@@ -51,10 +57,11 @@ namespace KeyboardApplicationRestApiServer.Controllers
                 return BadRequest();
             }
             _logger.LogInformation("[UserPost] method: user adding operation is successful!");
-            return Ok(addedUser);
+            var token = GenerateJwtToken(addedUser);
+            return Ok(new KeyValuePair<User,string?>(addedUser,token));
         }
 
-        // PUT <UserController>/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, User user)
         {
@@ -75,7 +82,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
 
         }
 
-        // DELETE <UserController>/id
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -116,7 +123,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         }
         // GET:User/LoginOrEmailAndPassword?loginOrEmail=value&shaPassword=value
         [HttpGet("LoginOrEmailAndPassword")]
-        public async Task<ActionResult<User>> GetUserByLoginOrEmailAndPassword(string loginOrEmail, string shaPassword)
+        public async Task<ActionResult<KeyValuePair<User,string>>> GetUserByLoginOrEmailAndPassword(string loginOrEmail, string shaPassword)
         {
             var user = await _model.GetUserByLoginOrEmailAndPasswordAsync(loginOrEmail, shaPassword);
 
@@ -126,7 +133,27 @@ namespace KeyboardApplicationRestApiServer.Controllers
                 return NotFound();
             }
             _logger.LogInformation($"[{nameof(GetUserByLoginOrEmailAndPassword)}] method return User(ID: {user.Id}");
-            return Ok(user);
+            var token = GenerateJwtToken(user);
+            return Ok(new KeyValuePair<User,string>(user,token));
+        }
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                new Claim(ClaimTypes.Name, user.Login)
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CourseProjectKeyboardApplication.Database.Models;
 using KeyboardApplicationRestApiServer.Database.Context;
 using KeyboardApplicationRestApiServer.Database.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             _logger = logger;
             _model = new (context);
         }
+       
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EnglishLayoutLesson>>> GetLessons()
         {
@@ -31,6 +33,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
             return Ok(lessonsCollection);
 
         }
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<EnglishLayoutLesson>>> GetLessonsByLevelId(int id)
         {

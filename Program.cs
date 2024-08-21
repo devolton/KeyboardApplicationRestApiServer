@@ -1,9 +1,12 @@
 using CourseProjectKeyboardApplication.Database.Models;
 using KeyboardApplicationRestApiServer.Database.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Data.Entity;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +16,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
         options.JsonSerializerOptions.MaxDepth = 64;
-
     });
-
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -28,10 +29,31 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 // Add DbContext with connection string
-builder.Services.AddScoped<TypingTutorDbContext>(provider =>new TypingTutorDbContext(connectionString));
+builder.Services.AddScoped<TypingTutorDbContext>(provider => new TypingTutorDbContext(connectionString));
 builder.Services.AddScoped<UserModel>();
 builder.Services.AddScoped<TypingTestResultModel>();
 
+// Configure JWT Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -43,6 +65,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication(); // Ensure authentication is added
 app.UseAuthorization();
 app.MapControllers();
 
