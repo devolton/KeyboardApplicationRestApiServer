@@ -20,19 +20,26 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             return await _typingTestResults.Where(oneTestResult => oneTestResult.UserId == userId).ToListAsync();
         }
-        public async Task<int> RemoveUsersTestAsync(int userId)
+        public async Task<int> RemoveUsersTestAsync(int userId, ILogger logger)
         {
             return await Task.Run(() =>
             {
-
-                var removeTestResultsCollection = _typingTestResults.Where(oneResult => oneResult.UserId.Equals(userId));
-                int removeCount = removeTestResultsCollection.Count();
-                _typingTestResults.RemoveRange(removeTestResultsCollection);
-                return removeCount;
+                try
+                {
+                    var removeTestResultsCollection = _typingTestResults.Where(oneResult => oneResult.UserId.Equals(userId));
+                    int removeCount = removeTestResultsCollection.Count();
+                    _typingTestResults.RemoveRange(removeTestResultsCollection);
+                    return removeCount;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"{DateTime.Now} - [{nameof(RemoveUsersTestAsync)}] method error: {ex.Message}");
+                }
+                return 0;
             });
 
         }
-        public async Task<int> AddNewTypingTestResultAsync(TypingTestResult typingTestResult)
+        public async Task<int> AddNewTypingTestResultAsync(TypingTestResult typingTestResult, ILogger logger)
         {
             return await Task.Run(async () =>
             {
@@ -45,39 +52,36 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     await SaveChangesAsync();
                     return ++successCode;
                 }
-                catch
+                catch(Exception ex)
                 {
-                    return successCode;
+                    logger.LogError($"{DateTime.Now} - [{nameof(AddNewTypingTestResultAsync)}] method error: {ex.Message}");
                 }
+                return successCode;
             });
         }
-        public async Task<int> AddRangeTypingTestResultsAsync(IEnumerable<TypingTestResult> typingTestResultCollection ,ILogger logger)
+        public async Task<int> AddRangeTypingTestResultsAsync(IEnumerable<TypingTestResult> typingTestResultCollection, ILogger logger)
         {
             int successCode = 0;
             try
             {
-                if (typingTestResultCollection.Count() > 0 && typingTestResultCollection is not null)
-                {
-                    logger.LogInformation(typingTestResultCollection.First().ToString());
-                }
-                foreach (var  typingTestResult in typingTestResultCollection)
+                foreach (var typingTestResult in typingTestResultCollection)
                 {
                     typingTestResult.User = _context.Users.FirstOrDefault(oneUser => oneUser.Id == typingTestResult.User.Id);
                     _context.Entry(typingTestResult.User).State = EntityState.Unchanged;
                     _context.Entry(typingTestResult).State = EntityState.Added;
                     _typingTestResults.Add(typingTestResult);
                 }
-                
+
                 await SaveChangesAsync();
                 return ++successCode;
-                
-            }
-            catch(Exception ex)
-            {
-                logger.LogError(ex.ToString());
-                return successCode;
-            }
 
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"{DateTime.Now} - [{nameof(AddRangeTypingTestResultsAsync)}] method error: {ex.Message}");
+               
+            }
+            return successCode;
 
         }
 

@@ -17,7 +17,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             _englishTypingTestTexts = _context.EnglishTypingTestTexts;
         }
-        public async Task<int> AddNewTextAsync(EnglishTypingTestText text)
+        public async Task<int> AddNewTextAsync(EnglishTypingTestText text, ILogger logger)
         {
             return await Task.Run(() =>
             {
@@ -30,8 +30,10 @@ namespace CourseProjectKeyboardApplication.Database.Models
                 }
                 catch(Exception ex)
                 {
-                    return successCode;
+                    logger.LogError($"{DateTime.Now} - [{nameof(AddNewTextAsync)}] method error: {ex.Message}");
                 }
+
+                return successCode;
             });
         }
         
@@ -42,14 +44,21 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             return await _englishTypingTestTexts.FirstOrDefaultAsync(oneText => oneText.Id == id);
         }
-        public async Task<int> RemoveTextByIdAsync(int id)
+        public async Task<int> RemoveTextByIdAsync(int id, ILogger logger)
         {
             int successCode = 0;
-            var removerText = await _englishTypingTestTexts.FirstOrDefaultAsync(oneText => oneText.Id == id);
-            if(removerText is not null)
+            try
             {
-                _englishTypingTestTexts.Remove(removerText);
-                successCode++;
+                var removerText = await _englishTypingTestTexts.FirstOrDefaultAsync(oneText => oneText.Id == id);
+                if (removerText is not null)
+                {
+                    _englishTypingTestTexts.Remove(removerText);
+                    successCode++;
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.LogError($"{DateTime.Now} - [{nameof(RemoveTextByIdAsync)}] method error: {ex.Message}");
             }
             
             return successCode;

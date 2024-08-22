@@ -23,7 +23,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             return await _englishLayoutLevels.ToListAsync();
         }
-        public async Task<int> AddLevelAsync(EnglishLayoutLevel level)
+        public async Task<int> AddLevelAsync(EnglishLayoutLevel level,ILogger logger)
         {
             return await Task.Run(() =>
               {
@@ -37,23 +37,30 @@ namespace CourseProjectKeyboardApplication.Database.Models
                   }
                   catch (Exception ex)
                   {
-                      return code;
+                      logger.LogError($"{DateTime.Now} - [{nameof(AddLevelAsync)}] method error: {ex.Message}");
                   }
-                  
-                
+                  return code;
+
               });
         }
-        public async Task<int> UpdateLevel(int levelId,EnglishLayoutLevel level)
+        public async Task<int> UpdateLevel(int levelId,EnglishLayoutLevel level, ILogger logger)
         {
             var code = 0;
-            var levelForUpdate = await _englishLayoutLevels.FirstOrDefaultAsync(oneLevel => oneLevel.Id == levelId);
-            if(levelForUpdate is not null)
+            try
             {
-                levelForUpdate.Title = level.Title;
-                levelForUpdate.Ordinal = level.Ordinal;
-                levelForUpdate.Users = level.Users;
-                levelForUpdate.Lessons = level.Lessons;
-                code++;
+                var levelForUpdate = await _englishLayoutLevels.FirstOrDefaultAsync(oneLevel => oneLevel.Id == levelId);
+                if (levelForUpdate is not null)
+                {
+                    levelForUpdate.Title = level.Title;
+                    levelForUpdate.Ordinal = level.Ordinal;
+                    levelForUpdate.Users = level.Users;
+                    levelForUpdate.Lessons = level.Lessons;
+                    code++;
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.LogError($"{DateTime.Now} - [{nameof(UpdateLevel)}] method error: {ex.Message}");
             }
             return code;     
         }

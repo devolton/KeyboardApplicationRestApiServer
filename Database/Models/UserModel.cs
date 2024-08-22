@@ -10,6 +10,7 @@ using System.Collections;
 using System.Xml;
 using KeyboardApplicationRestApiServer.Database.Entities;
 using KeyboardApplicationRestApiServer.Database.Context;
+using Microsoft.Extensions.Logging;
 
 namespace CourseProjectKeyboardApplication.Database.Models
 {
@@ -38,7 +39,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             return !await _users.AnyAsync(oneUser => oneUser.Login.Equals(login));
         }
-        public async Task<int> UpdateUserAsync(User user)
+        public async Task<int> UpdateUserAsync(User user, ILogger logger)
         {
             int successOperationCode = 0;
             try
@@ -72,7 +73,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     }
                     catch (Exception ex)
                     {
-                        
+                        logger.LogError($"{DateTime.Now} - [{nameof(UpdateUserAsync)}] method error: {ex.Message}");
                     }
                 }
                 else
@@ -83,21 +84,28 @@ namespace CourseProjectKeyboardApplication.Database.Models
             }
             catch(NullReferenceException ex)
             {
-                Console.WriteLine(ex.Message+ ":"+ ex.Source+" "+ex.TargetSite);
+                logger.LogError($"{DateTime.Now} - [{nameof(UpdateUserAsync)}] method error: {ex.Message}");
             }
             return successOperationCode;
         }
 
 
-        public async Task<int> RemoveUserAsync(int id)
+        public async Task<int> RemoveUserAsync(int id,ILogger logger)
         {
             int successOperationCode = 0;
-            User? user = await GetUserByIdAsync(id);
-            if (user != null)
+            try
             {
-                _users.Remove(user);
-                _context.Entry(user).State = EntityState.Deleted;
-                successOperationCode++;
+                User? user = await GetUserByIdAsync(id);
+                if (user != null)
+                {
+                    _users.Remove(user);
+                    _context.Entry(user).State = EntityState.Deleted;
+                    successOperationCode++;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"{DateTime.Now} - [{nameof(RemoveUserAsync)}] method error: {ex.Message}");
             }
             return successOperationCode;
 
@@ -128,9 +136,10 @@ namespace CourseProjectKeyboardApplication.Database.Models
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex.Message);
-                    return null;
+                    logger.LogError($"{DateTime.Now} - [{nameof(AddNewUserAsync)}] method error: {ex.Message}");
+
                 }
+                return null;
             });
         }
         public async Task<bool> IsUserExistByEmailAsync(string email)

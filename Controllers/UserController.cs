@@ -9,7 +9,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace KeyboardApplicationRestApiServer.Controllers
 {
@@ -37,10 +36,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var user = await _model.GetUserByIdAsync(id);
             if (user is null)
             {
-                _logger.LogWarning($"[{nameof(GetUserById)}] method return NULL!");
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetUserById)}] method return NULL!");
                 return NotFound();
             }
-            _logger.LogInformation($"[{nameof(GetUserById)}] method return user(Id: {user.Id})");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetUserById)}] method return user(Id: {user.Id})");
             return Ok(user);
         }
 
@@ -48,16 +47,17 @@ namespace KeyboardApplicationRestApiServer.Controllers
 
         // POST <UserController>
         [HttpPost]
-        public async Task<ActionResult<KeyValuePair<User,string?>>> Post(User newUser)
+        public async Task<ActionResult<KeyValuePair<User,string?>>> AddNewUser(User newUser)
         {
             var addedUser = await _model.AddNewUserAsync(newUser,_logger);
             if(addedUser is null)
             {
-                _logger.LogWarning("[UserPost] method ERROR!");
+                _logger.LogError($"{DateTime.Now} - [{nameof(AddNewUser)}] method error!");
                 return BadRequest();
             }
-            _logger.LogInformation("[UserPost] method: user adding operation is successful!");
+
             var token = GenerateJwtToken(addedUser);
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(AddNewUser)}] method return created user with ID: {addedUser.Id} and genarated Jwt token!");
             return Ok(new KeyValuePair<User,string?>(addedUser,token));
         }
 
@@ -68,16 +68,16 @@ namespace KeyboardApplicationRestApiServer.Controllers
             bool isUserExist = await _model.IsUserExistById(id);
             if (!isUserExist)
             {
-                _logger.LogWarning($"[{nameof(UpdateUser)}] method return Null!");
+                _logger.LogWarning($"{DateTime.Now}  - [{nameof(UpdateUser)}] User not found!");
                 return NotFound();
             }
-            var successCode = await _model.UpdateUserAsync(user);
+            var successCode = await _model.UpdateUserAsync(user,_logger);
             if (successCode == 0)
             {
-                _logger.LogWarning($"[{nameof(UpdateUser)}] method return Null!");
+                _logger.LogError($"{DateTime.Now} - [{nameof(UpdateUser)}] method error");
                 return BadRequest();
             }
-            _logger.LogInformation($"[{nameof(UpdateUser)}] is success!");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(UpdateUser)}] is successful!");
             return Ok();
 
         }
@@ -86,11 +86,13 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var successCode = await _model.RemoveUserAsync(id);
+            var successCode = await _model.RemoveUserAsync(id,_logger);
             if (successCode == 0)
             {
+                _logger.LogError($"{DateTime.Now} - [{nameof(Delete)}] method error!");
                 return NotFound();
             }
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(Delete)}] method successfull!");
             return NoContent();
         }
         // GET: Users/IsUniqueEmail
@@ -98,6 +100,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         public async Task<ActionResult<bool>> IsUniqueEmail(string email)
         {
             var isUnique = await _model.IsUniqueEmailAsync(email);
+            
             return Ok(isUnique);
         }
 
@@ -106,6 +109,7 @@ namespace KeyboardApplicationRestApiServer.Controllers
         public async Task<ActionResult<bool>> IsUniqueLogin(string login)
         {
             var isUnique = await _model.IsUniqueLoginAsync(login);
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(IsUniqueLogin)}] method successfull!");
             return Ok(isUnique);
         }
         //Get: User/IsUserExistByEmail
@@ -113,12 +117,14 @@ namespace KeyboardApplicationRestApiServer.Controllers
         public async Task<ActionResult<bool>> IsUserExistByEmail(string email)
         {
             var isExist = await _model.IsUserExistByEmailAsync(email);
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(IsUserExistByEmail)}] method successfull!");
             return Ok(isExist);
         }
         [HttpGet("IsUserExistByLogin/{login}")]
         public async Task<ActionResult<bool>> IsUserExistByLogin(string login)
         {
             var isExist = await _model.IsUserExistByLoginAsync(login);
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(IsUniqueLogin)}] method successfull!");
             return Ok(isExist);
         }
         // GET:User/LoginOrEmailAndPassword?loginOrEmail=value&shaPassword=value
@@ -129,11 +135,11 @@ namespace KeyboardApplicationRestApiServer.Controllers
 
             if (user is null)
             {
-                _logger.LogWarning($"[{nameof(GetUserByLoginOrEmailAndPassword)}] method return NULL!");
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetUserByLoginOrEmailAndPassword)}] method return NULL!");
                 return NotFound();
             }
-            _logger.LogInformation($"[{nameof(GetUserByLoginOrEmailAndPassword)}] method return User(ID: {user.Id}");
             var token = GenerateJwtToken(user);
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetUserByLoginOrEmailAndPassword)}] method return user with Id: {user.Id} and Jwt token!");
             return Ok(new KeyValuePair<User,string>(user,token));
         }
         private string GenerateJwtToken(User user)

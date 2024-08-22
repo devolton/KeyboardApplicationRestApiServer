@@ -23,23 +23,35 @@ namespace KeyboardApplicationRestApiServer.Controllers
         {
             var collection = await _model.GetLevelsAsync();
             if (collection is null)
+            {
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetLevel)}] method return NULL!"); 
                 return NotFound();
+            }
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetLevel)}] method return collectoin of {collection.Count()} EnglishLayoutLevel elements!");
             return Ok(collection);
         }
         [HttpPost]
         public async Task<IActionResult> AddLevel(EnglishLayoutLevel newLevel)
         {
-            int code = await _model.AddLevelAsync(newLevel);
+            int code = await _model.AddLevelAsync(newLevel,_logger);
             if (code == 0)
+            {
+                _logger.LogError($"{DateTime.Now} - [{nameof(AddLevel)}] method error!");
                 return BadRequest();
+            }
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(AddLevel)}] method successful!");
             return NoContent();
         }
         [HttpPut("{id}/level")]
         public async Task<IActionResult> UpdateLevel(int id, EnglishLayoutLevel level)
         {
-            var code = await _model.UpdateLevel(id, level);
+            var code = await _model.UpdateLevel(id, level,_logger);
             if (code == 0)
+            {
+                _logger.LogError($"{DateTime.Now} - [{nameof(UpdateLevel)}] method error!");
                 return NotFound();
+            }
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(UpdateLevel)}] method successful!");
             return NoContent();
         }
         [HttpGet("{id}")]
@@ -48,10 +60,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var level = await _model.GetLevelByIdAsync(id);
             if (level is null)
             {
-                _logger.LogWarning($"[{nameof(GetLevelById)}] method return null!");
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetLevelById)}] method return null!");
                 return NotFound();
             }
-            _logger.LogInformation($"[{nameof(GetLevelById)}] method is success!");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetLevelById)}] method is successful!");
             return Ok(level);
         }
     }

@@ -25,11 +25,11 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var lessonsCollection = await _model.GetAllLessonsAsync();
             if (lessonsCollection is null)
             {
-                _logger.LogWarning("GetLessons method return NULL!");
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetLessons)}] method return NULL!");
                 return NotFound();
             }
               
-            _logger.LogInformation("GetLessons method return collection!");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetLessons)}] method return collection of {lessonsCollection.Count()} EnglishLayoutLesson elements!");
             return Ok(lessonsCollection);
 
         }
@@ -39,16 +39,23 @@ namespace KeyboardApplicationRestApiServer.Controllers
         {
             var lessonsCollection = await _model.GetLessonsByLevelIdAsync(id);
             if (lessonsCollection is null)
+            {
+                _logger.LogInformation($"{DateTime.Now} - [{nameof(GetLessonsByLevelId)}] method return NULL!");
                 return NotFound();
-            _logger.LogInformation($"[{nameof(GetLessonsByLevelId)}] method is success!");
+            }
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetLessonsByLevelId)} method return collecton of {lessonsCollection.Count()} EngilshLayoutLesson elements!");
             return Ok(lessonsCollection);
         }
         [HttpPut("{id}/lesson")]
         public async Task<IActionResult> UpdateLesson(int id, EnglishLayoutLesson lesson)
         {
-            int code = await _model.UpdateLessonAsync(id, lesson);
+            int code = await _model.UpdateLessonAsync(id, lesson, _logger);
             if (code == 0)
+            {
+                _logger.LogError($"{DateTime.Now} - [{nameof(UpdateLesson)}] method error!");
                 return BadRequest();
+            }
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(UpdateLesson)}] method success!");
             return NoContent();
         }
 

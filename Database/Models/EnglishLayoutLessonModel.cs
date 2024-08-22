@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CourseProjectKeyboardApplication.Database.Models
 {
-    public class EnglishLayoutLessonModel:BaseTypingTutorModel
+    public class EnglishLayoutLessonModel : BaseTypingTutorModel
     {
         private DbSet<EnglishLayoutLesson> _englishLayoutLessons;
 
@@ -21,29 +21,36 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             return await _englishLayoutLessons.ToListAsync();
         }
-        public async  Task<IEnumerable<EnglishLayoutLesson>> GetLessonsByLevelIdAsync(int levelId)
+        public async Task<IEnumerable<EnglishLayoutLesson>> GetLessonsByLevelIdAsync(int levelId)
         {
-            return await _englishLayoutLessons.Where(oneLesson=>oneLesson.EnglishLayoutLevelId == levelId).ToListAsync();
+            return await _englishLayoutLessons.Where(oneLesson => oneLesson.EnglishLayoutLevelId == levelId).ToListAsync();
         }
-        public async Task<int> UpdateLessonAsync(int lessonId, EnglishLayoutLesson lesson)
+        public async Task<int> UpdateLessonAsync(int lessonId, EnglishLayoutLesson lesson, ILogger logger)
         {
             var code = 0;
-            var lessonForUpdate = await _englishLayoutLessons.FirstOrDefaultAsync(oneLesson => oneLesson.Id == lessonId);
-            if (lessonForUpdate is not null)
+            try
             {
-                lessonForUpdate.Text = lesson.Text;
-                lessonForUpdate.Ordinal = lesson.Ordinal;
-                lessonForUpdate.Users = lesson.Users;
-                lessonForUpdate.EducationUsersProgresses = lesson.EducationUsersProgresses;
-                lessonForUpdate.EnglishLayoutLevel = lesson.EnglishLayoutLevel;
-               
-                code++;
+                var lessonForUpdate = await _englishLayoutLessons.FirstOrDefaultAsync(oneLesson => oneLesson.Id == lessonId);
+                if (lessonForUpdate is not null)
+                {
+                    lessonForUpdate.Text = lesson.Text;
+                    lessonForUpdate.Ordinal = lesson.Ordinal;
+                    lessonForUpdate.Users = lesson.Users;
+                    lessonForUpdate.EducationUsersProgresses = lesson.EducationUsersProgresses;
+                    lessonForUpdate.EnglishLayoutLevel = lesson.EnglishLayoutLevel;
+
+                    code++;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"{DateTime.Now} - [{nameof(UpdateLessonAsync)}] method error: {ex.Message}");
             }
             return code;
         }
         public async Task<EnglishLayoutLesson?> GetNextLessonAsync(EnglishLayoutLesson currentLesson)
         {
-            return  await _englishLayoutLessons.Where(oneLesson => oneLesson.Id > currentLesson.Id)?.OrderBy(oneLesson => oneLesson.Id).FirstOrDefaultAsync();
+            return await _englishLayoutLessons.Where(oneLesson => oneLesson.Id > currentLesson.Id)?.OrderBy(oneLesson => oneLesson.Id).FirstOrDefaultAsync();
 
         }
     }

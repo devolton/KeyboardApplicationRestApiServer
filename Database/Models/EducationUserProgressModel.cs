@@ -49,12 +49,12 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     }
                     _context.Entry(educationUserProgress).State = EntityState.Added;
                     _educationUsersProgresses.Add(educationUserProgress);
-                    logger.LogInformation($"[{nameof(AddNewEducationUserProgressAsync)}] method is success!");
+                    logger.LogInformation($"{DateTime.Now} - [{nameof(AddNewEducationUserProgressAsync)}] method is success!");
                     SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex.ToString());
+                    logger.LogError($"{DateTime.Now} - [{nameof(AddNewEducationUserProgressAsync)}] method error! Message: {ex.Message}");
                 }
             });
 
@@ -101,20 +101,13 @@ namespace CourseProjectKeyboardApplication.Database.Models
                         _educationUsersProgresses.Add(educationUserProgress);
                     }
 
-                    logger.LogInformation($"[{nameof(AddRangeNewEducationProgressAsync)}] method success! {nameof(_educationUsersProgresses)} elements count: {_educationUsersProgresses.Count()}");
                     await _context.SaveChangesAsync();
+                    logger.LogInformation($"{DateTime.Now} - [{nameof(AddRangeNewEducationProgressAsync)}] method success! {nameof(_educationUsersProgresses)} elements count: {_educationUsersProgresses.Count()}");
 
                 }
                 catch (DbUpdateException ex)
                 {
-                    var innerException = ex.InnerException?.Message;
-                    logger.LogError(innerException);
-                    string str = string.Empty;
-                    foreach (var item in ex.Entries)
-                    {
-                        str += item.ToString() + " ";
-                    }
-                    logger.LogError(str);
+                    logger.LogError($"{DateTime.Now} - [{nameof(AddRangeNewEducationProgressAsync)}] method error! Message: {ex.Message}");
                    
                 }
 
@@ -124,22 +117,57 @@ namespace CourseProjectKeyboardApplication.Database.Models
         {
             return await _educationUsersProgresses.Where(oneProgress => oneProgress.UserId == userId).ToListAsync();
         }
-        public async Task<int> RemoveUsersEducationProgressAsync(int userId)
+        public async Task<int> RemoveUsersEducationProgressAsync(int userId, ILogger logger)
         {
             return await Task.Run(() =>
              {
-                 var removeEducationProgressesCollection = _educationUsersProgresses.Where(oneProgress => oneProgress.UserId == userId);
-                 int removeCount = removeEducationProgressesCollection.Count();
-                 _educationUsersProgresses.RemoveRange(removeEducationProgressesCollection);
-                 return removeCount;
+                 try
+                 {
+                     var removeEducationProgressesCollection = _educationUsersProgresses.Where(oneProgress => oneProgress.UserId == userId);
+                     int removeCount = removeEducationProgressesCollection.Count();
+                     _educationUsersProgresses.RemoveRange(removeEducationProgressesCollection);
+                     return removeCount;
+                 }
+                 catch (Exception ex)
+                 {
+                     logger.LogError($"{DateTime.Now} - [{nameof(RemoveUsersEducationProgressAsync)}] method error: {ex.Message}");
+                 }
+                 return 0;
              });
 
         }
-        public async Task UpdateRangeEducationProgressAsync(IEnumerable<EducationUsersProgress> updatedEducationUserProgressCollection)
+        public async Task UpdateRangeEducationProgressAsync(IEnumerable<EducationUsersProgress> updatedEducationUserProgressCollection,ILogger logger)
         {
             await Task.Run(async () =>
             {
-                foreach (var updatedEducationUserProgress in updatedEducationUserProgressCollection)
+                try
+                {
+                    foreach (var updatedEducationUserProgress in updatedEducationUserProgressCollection)
+                    {
+                        EducationUsersProgress? educationUserProgress = _context.EducationUsersProgresses?.FirstOrDefault(oneEducProg => oneEducProg.Id == updatedEducationUserProgress.Id);
+                        if (educationUserProgress is not null)
+                        {
+                            educationUserProgress.IsWithoutErrorsCompleted = updatedEducationUserProgress.IsWithoutErrorsCompleted;
+                            educationUserProgress.IsLessThanTwoErrorsCompleted = updatedEducationUserProgress.IsLessThanTwoErrorsCompleted;
+                            educationUserProgress.IsSpeedCompleted = updatedEducationUserProgress.IsSpeedCompleted;
+                            _context.Entry(educationUserProgress).State = EntityState.Modified;
+
+                        }
+                    }
+                    await SaveChangesAsync();
+                    logger.LogInformation($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method is success!");
+                }
+                catch(Exception ex)
+                {
+                    logger.LogError($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method error! Message: {ex.Message}");
+                }
+            });
+        }
+        public async Task UpdateEducationProgressAsync(EducationUsersProgress updatedEducationUserProgress, ILogger logger)
+        {
+            await Task.Run(async () =>
+            {
+                try
                 {
                     EducationUsersProgress? educationUserProgress = _context.EducationUsersProgresses?.FirstOrDefault(oneEducProg => oneEducProg.Id == updatedEducationUserProgress.Id);
                     if (educationUserProgress is not null)
@@ -148,28 +176,15 @@ namespace CourseProjectKeyboardApplication.Database.Models
                         educationUserProgress.IsLessThanTwoErrorsCompleted = updatedEducationUserProgress.IsLessThanTwoErrorsCompleted;
                         educationUserProgress.IsSpeedCompleted = updatedEducationUserProgress.IsSpeedCompleted;
                         _context.Entry(educationUserProgress).State = EntityState.Modified;
-                       
+
                     }
+                    await SaveChangesAsync();
+                    logger.LogInformation($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method success!");
                 }
-                await SaveChangesAsync();
-            });
-        }
-        public async Task UpdateEducationProgressAsync(EducationUsersProgress updatedEducationUserProgress)
-        {
-            await Task.Run(async () =>
-            {
-
-                    EducationUsersProgress? educationUserProgress = _context.EducationUsersProgresses?.FirstOrDefault(oneEducProg => oneEducProg.Id == updatedEducationUserProgress.Id);
-                    if (educationUserProgress is not null)
-                    {
-                        educationUserProgress.IsWithoutErrorsCompleted = updatedEducationUserProgress.IsWithoutErrorsCompleted;
-                        educationUserProgress.IsLessThanTwoErrorsCompleted = updatedEducationUserProgress.IsLessThanTwoErrorsCompleted;
-                        educationUserProgress.IsSpeedCompleted = updatedEducationUserProgress.IsSpeedCompleted;
-                        _context.Entry(educationUserProgress).State = EntityState.Modified;
-
-                    }
-                
-                await SaveChangesAsync();
+                catch(Exception ex)
+                {
+                    logger.LogError($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method error! Message: {ex.Message}");
+                }
             });
         }
         public async Task<EducationUsersProgress?> GetNextEducationProgressAsync(EducationUsersProgress currentProgress)

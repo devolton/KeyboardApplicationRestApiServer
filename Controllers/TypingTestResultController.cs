@@ -2,7 +2,6 @@
 using KeyboardApplicationRestApiServer.Database.Context;
 using KeyboardApplicationRestApiServer.Database.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KeyboardApplicationRestApiServer.Controllers
@@ -26,10 +25,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var testsCollection =await _model.GetTypingTestResultsByUserIdAsync(userId);
             if (testsCollection is null)
             {
-                _logger.LogWarning($"[{nameof(GetUserTests)}] return Null! Date: "+ DateTime.Now);
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetUserTests)}] return Null!");
                 return NotFound();
             }
-            _logger.LogInformation($"[{nameof(GetUserTests)}] return collection. Count: "+testsCollection.Count().ToString() + "Date: "+DateTime.Now);
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetUserTests)}] return collecton of {testsCollection.Count()} TypingTestResult elements!");
             return Ok(testsCollection);
         }
         [Authorize]
@@ -39,36 +38,36 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var bestUserTest= await _model.GetBestUserTestResultAsync(userId);
             if(bestUserTest is null)
             {
-                _logger.LogWarning("GetBestUserTest return NULL! Date: "+DateTime.Now);
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetBestUserTest)}] method return NULL!");
                 return NotFound();
             }
-            _logger.LogInformation("GetBestUserTest return bestUserTest! Date: "+DateTime.Now);
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetBestUserTest)}] method return {nameof(TypingTestResult)} entity!");
             return Ok(bestUserTest);
         }
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTypingTestResult(int id)
         {
-            var removedCount = await _model.RemoveUsersTestAsync(id);
+            var removedCount = await _model.RemoveUsersTestAsync(id, _logger);
             if (removedCount == 0)
             {
-                _logger.LogWarning("DeleteTypingTestResult method error!");
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(DeleteTypingTestResult)}] method error!");
                 return NotFound();
             }
-            _logger.LogInformation("DeleteTypingTestResult method success!");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(DeleteTypingTestResult)}] method successful!");
             return Ok();
         }
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddNewTypingTestResult(TypingTestResult typingTestResult)
         {
-            var code = await _model.AddNewTypingTestResultAsync(typingTestResult);
+            var code = await _model.AddNewTypingTestResultAsync(typingTestResult, _logger);
             if (code == 0)
             {
-                _logger.LogWarning("AddNewTypingTest method error!");
+                _logger.LogError($"{DateTime.Now} - [{nameof(AddNewTypingTestResult)}] method error!");
                 return BadRequest();
             }
-            _logger.LogInformation("AddNewTypingTest is successfully!");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(AddNewTypingTestResult)}] method is successfully!");
             return Ok();
         }
         [Authorize]
@@ -78,10 +77,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var code = await _model.AddRangeTypingTestResultsAsync(typingTestResultCollection, _logger);
             if(code == 0)
             {
-                _logger.LogError($"[{nameof(AddRangeTypingTestResult)}] method error!");
+                _logger.LogError($"{DateTime.Now} - [{nameof(AddRangeTypingTestResult)}] method error!");
                 return BadRequest();
             }
-            _logger.LogInformation($"[{nameof(AddRangeTypingTestResult)}] method is success. Added count: {typingTestResultCollection.Count()}. Time: {DateTime.Now}");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(AddRangeTypingTestResult)}] method is success. Added count: {typingTestResultCollection.Count()}");
             return Ok();
         }
     }

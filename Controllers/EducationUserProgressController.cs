@@ -27,10 +27,10 @@ namespace KeyboardApplicationRestApiServer.Controllers
             var collection = await _model.GetUsersEducationProgressAsync(userId);
             if (collection is null)
             {
-                _logger.LogWarning($"[{nameof(GetEducationProgressesByUserId)}] method return null!");
+                _logger.LogWarning($"{DateTime.Now} - [{nameof(GetEducationProgressesByUserId)}] method return null!");
                 return NotFound();
             }
-            _logger.LogInformation($"[{nameof(GetEducationProgressesByUserId)}] method return collection. Elements count: {collection.Count()}");
+            _logger.LogInformation($"{DateTime.Now} - [{nameof(GetEducationProgressesByUserId)}] method return collection. Elements count: {collection.Count()}");
             return Ok(collection);
         }
 
@@ -45,7 +45,6 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPost("AddRange")]
         public async Task<IActionResult> AddRangeEducationProgress(IEnumerable<EducationUsersProgress> educationUsersProgressCollection)
         {
-            _logger.LogInformation($"{nameof(AddRangeEducationProgress)} method is started working!");
             await _model.AddRangeNewEducationProgressAsync(educationUsersProgressCollection, _logger);
             return NoContent();
         }
@@ -53,18 +52,14 @@ namespace KeyboardApplicationRestApiServer.Controllers
         [HttpPut("UpdateRange")]
         public async Task<IActionResult> UpdateRangeEducatonProgress(IEnumerable<EducationUsersProgress> educationUsersProgressCollection)
         {
-            _logger.LogInformation($"[{nameof(UpdateRangeEducatonProgress)}] method is start!");
-            await _model.UpdateRangeEducationProgressAsync(educationUsersProgressCollection);
-            _logger.LogInformation($"[{nameof(UpdateRangeEducatonProgress)}] method is success!");
+            await _model.UpdateRangeEducationProgressAsync(educationUsersProgressCollection, _logger);
             return NoContent();
         }
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateEducationProgress(EducationUsersProgress educationProgress)
         {
-            _logger.LogInformation($"[{nameof(UpdateEducationProgress)}] method is start!");
-            await _model.UpdateEducationProgressAsync(educationProgress);
-            _logger.LogInformation($"[{nameof(UpdateEducationProgress)}] method is success!");
+            await _model.UpdateEducationProgressAsync(educationProgress,_logger);
             return NoContent();
 
         }
