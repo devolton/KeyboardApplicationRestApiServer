@@ -61,57 +61,55 @@ namespace CourseProjectKeyboardApplication.Database.Models
         }
         public async Task AddRangeNewEducationProgressAsync(IEnumerable<EducationUsersProgress> collection, ILogger logger)
         {
-            await Task.Run(async () =>
+
+            try
             {
-                try
+                foreach (var educationUserProgress in collection)
                 {
-                    foreach (var educationUserProgress in collection)
+                    var existingUser = await _context.Users.FirstOrDefaultAsync(oneUser=> oneUser.Id ==educationUserProgress.UserId);
+                    var existingLesson = await _context.EnglishLayoutLessons.FirstOrDefaultAsync(oneLesson=> oneLesson.Id == educationUserProgress.EnglishLayoutLessonId);
+                    var existingLevel = await _context.EnglishLayoutLevels.FirstOrDefaultAsync(oneLevel=> oneLevel.Id == educationUserProgress.EnglishLayoutLevelId);
+                    var userLesson = await _context.EnglishLayoutLessons.FirstOrDefaultAsync(oneLesson=>oneLesson.Id ==(educationUserProgress.EnglishLayoutLesson.Id + 1)) ?? existingLesson;
+                    var userLevel = userLesson.EnglishLayoutLevel;
+
+
+                    if (existingUser != null)
                     {
-                        var existingUser = await _context.Users.FindAsync(educationUserProgress.User.Id);
-                        var existingLesson = await _context.EnglishLayoutLessons.FindAsync(educationUserProgress.EnglishLayoutLesson.Id);
-                        var existingLevel = await _context.EnglishLayoutLevels.FindAsync(educationUserProgress.EnglishLayoutLevel.Id);
-                        var userLesson = await _context.EnglishLayoutLessons.FindAsync(educationUserProgress.EnglishLayoutLesson.Id + 1) ?? existingLesson;
-                        var userLevel = userLesson.EnglishLayoutLevel;
+                        existingUser.EnglishLayoutLevel = userLevel;
+                        existingUser.EnglishLayoutLevelId = userLevel.Id;
+                        existingUser.EnglishLayoutLesson = userLesson;
+                        existingUser.EnglishLayoutLessonId = userLesson.Id;
 
-
-                        if (existingUser != null)
-                        {
-                            existingUser.EnglishLayoutLevel = userLevel;
-                            existingUser.EnglishLayoutLevelId = userLevel.Id;
-                            existingUser.EnglishLayoutLesson = userLesson;
-                            existingUser.EnglishLayoutLessonId = userLesson.Id;
-
-                            educationUserProgress.User = existingUser;
-                            _context.Entry(existingUser).State = EntityState.Modified;
-                        }
-
-                        if (existingLesson != null)
-                        {
-                            educationUserProgress.EnglishLayoutLesson = existingLesson;
-                            _context.Entry(existingLesson).State = EntityState.Unchanged;
-                        }
-
-                        if (existingLevel != null)
-                        {
-                            educationUserProgress.EnglishLayoutLevel = existingLevel;
-                            _context.Entry(existingLevel).State = EntityState.Unchanged;
-                        }
-
-                        _context.Entry(educationUserProgress).State = EntityState.Added;
-                        _educationUsersProgresses.Add(educationUserProgress);
+                        educationUserProgress.User = existingUser;
+                        _context.Entry(existingUser).State = EntityState.Modified;
                     }
 
-                    await _context.SaveChangesAsync();
-                    logger.LogInformation($"{DateTime.Now} - [{nameof(AddRangeNewEducationProgressAsync)}] method success! {nameof(_educationUsersProgresses)} elements count: {_educationUsersProgresses.Count()}");
+                    if (existingLesson != null)
+                    {
+                        educationUserProgress.EnglishLayoutLesson = existingLesson;
+                        _context.Entry(existingLesson).State = EntityState.Unchanged;
+                    }
 
-                }
-                catch (DbUpdateException ex)
-                {
-                    logger.LogError($"{DateTime.Now} - [{nameof(AddRangeNewEducationProgressAsync)}] method error! Message: {ex.Message}");
-                   
+                    if (existingLevel != null)
+                    {
+                        educationUserProgress.EnglishLayoutLevel = existingLevel;
+                        _context.Entry(existingLevel).State = EntityState.Unchanged;
+                    }
+
+                
+                    _educationUsersProgresses.Add(educationUserProgress);
+                    _context.Entry(educationUserProgress).State = EntityState.Added;
                 }
 
-            });
+                await _context.SaveChangesAsync();
+                logger.LogInformation($"{DateTime.Now} - [{nameof(AddRangeNewEducationProgressAsync)}] method success! {nameof(collection)} elements count: {collection.Count()}");
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"{DateTime.Now} - [{nameof(AddRangeNewEducationProgressAsync)}] method error! Message: {ex.Message}");
+
+            }
         }
         public async Task<IEnumerable<EducationUsersProgress>> GetUsersEducationProgressAsync(int userId)
         {
@@ -136,7 +134,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
              });
 
         }
-        public async Task UpdateRangeEducationProgressAsync(IEnumerable<EducationUsersProgress> updatedEducationUserProgressCollection,ILogger logger)
+        public async Task UpdateRangeEducationProgressAsync(IEnumerable<EducationUsersProgress> updatedEducationUserProgressCollection, ILogger logger)
         {
             await Task.Run(async () =>
             {
@@ -157,7 +155,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     await SaveChangesAsync();
                     logger.LogInformation($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method is success!");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.LogError($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method error! Message: {ex.Message}");
                 }
@@ -181,7 +179,7 @@ namespace CourseProjectKeyboardApplication.Database.Models
                     await SaveChangesAsync();
                     logger.LogInformation($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method success!");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.LogError($"{DateTime.Now} - [{nameof(UpdateEducationProgressAsync)}] method error! Message: {ex.Message}");
                 }
